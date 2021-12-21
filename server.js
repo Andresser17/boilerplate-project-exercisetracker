@@ -48,7 +48,7 @@ const addExerciseToUser = async (_id, description, duration, date) => {
   const user = await User.findOne({ _id });
 
   // Test if user exist
-  if (!user) return { error: "username not found" };
+  if (user === null) return { error: "username not found" };
 
   // Test if description and duration were provided
   if (description.length === 0 || Number(duration) <= 0)
@@ -195,27 +195,37 @@ app
   });
 
 // 61c0ceb68de38dbb2f5d8c04
-app.post("/api/users/:_id/exercises", async (req, res) => {
-  const _id = req.body[":_id"];
-  const description = req.body.description;
-  const duration = req.body.duration;
-  const date = req.body.date;
+app.post(
+  "/api/users/:_id/exercises",
+  async (req, res, next) => {
+    const _id = req.body[":_id"];
+    const description = req.body.description;
+    const duration = req.body.duration;
+    const date = req.body.date;
 
-  const addedExercise = await addExerciseToUser(
-    _id,
-    description,
-    duration,
-    date
-  );
+    req.addedExercise = await addExerciseToUser(
+      _id,
+      description,
+      duration,
+      date
+    );
 
-  res.json({
-    username: addedExercise.username,
-    description: addedExercise.description,
-    duration: addedExercise.duration,
-    date: addedExercise.date,
-    _id: addedExercise._id,
-  });
-});
+    next();
+  },
+  (req, res) => {
+    const addedExercise = req.addedExercise;
+
+    if (addedExercise.error !== undefined) return res.json(addedExercise);
+
+    res.json({
+      username: addedExercise.username,
+      description: addedExercise.description,
+      duration: addedExercise.duration,
+      date: addedExercise.date,
+      _id: addedExercise._id,
+    });
+  }
+);
 
 app.get(
   "/api/users/:_id/logs?:from?:to?:limit",
