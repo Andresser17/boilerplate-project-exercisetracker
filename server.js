@@ -57,9 +57,16 @@ const addExerciseToUser = async (_id, description, duration, date) => {
     };
 
   // Test if date was pass to funct
-  const newDate = date
-    ? new Date(date).toDateString()
-    : new Date().toDateString();
+  let newDate = new Date().toDateString();
+
+  if (date) {
+    const day = date.split("-")[2];
+    const month = date.split("-")[1] - 1;
+    const year = date.split("-")[0];
+
+    // Year Day Month
+    newDate = new Date(year, month, day).toDateString();
+  }
 
   const exercise = {
     description,
@@ -201,12 +208,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     date
   );
 
-  res.send({
-    _id: addedExercise._id,
+  res.json({
     username: addedExercise.username,
-    date: addedExercise.date,
-    duration: addedExercise.duration,
     description: addedExercise.description,
+    duration: addedExercise.duration,
+    date: addedExercise.date,
+    _id: addedExercise._id,
   });
 });
 
