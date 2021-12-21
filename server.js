@@ -144,15 +144,19 @@ const getUserExercises = async (_id, from, to, limit) => {
   );
 
   // Apply filter to the exercises fetched
+  const newUser = { ...user._doc };
   if (from || to || limit) {
     const filtered = filterExercises(user.log, from, to, limit);
 
-    user.log = filtered;
+    newUser.count = filtered.length;
+    newUser.log = filtered;
 
-    return user;
+    return newUser;
   }
 
-  return user;
+  newUser.count = user.log.length;
+
+  return newUser;
 };
 
 // Configure express to use bodyParser as middleware
