@@ -108,10 +108,21 @@ const filterExercises = (log, from, to, limit) => {
       // transform to the format YY-MM-DD
       const date = new Date(item.date);
 
-      const day = date.getDate();
-      const month = date.getMonth() + 1;
-      const year = date.getFullYear();
+      // Check if day.length is minor to 2, then
+      // concatenate 0
+      const day =
+        String(date.getDate()).length < 2
+          ? `0${date.getDate()}`
+          : date.getDate();
 
+      // Check if month.length is minor to 2, then
+      // concatenate 0
+      const month =
+        String(date.getMonth() + 1).length < 2
+          ? `0${date.getMonth() + 1}`
+          : date.getMonth() + 1;
+
+      const year = date.getFullYear();
       const fullDate = Number(`${year}${month}${day}`);
       const intFrom = from ? Number(from.replace(/-+/g, "")) : false;
       const intTo = to ? Number(to.replace(/-+/g, "")) : false;
@@ -145,7 +156,7 @@ const getUserExercises = async (_id, from, to, limit) => {
       // "log.duration": true,
       // "log.date": true,
       "log._id": false,
-      __v: false
+      __v: false,
       // log: { $project: { _id: false } },
     }
   );
@@ -230,7 +241,7 @@ app.post(
 app.get(
   "/api/users/:_id/logs?:from?:to?:limit",
   async (req, res, next) => {
-    const _id = req.params["_id"];
+    const _id = req.params._id;
     const from = req.query.from;
     const to = req.query.to;
     const limit = req.query.limit;
