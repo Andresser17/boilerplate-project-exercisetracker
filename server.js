@@ -141,12 +141,12 @@ const getUserExercises = async (_id, from, to, limit) => {
   const user = await User.findOne(
     { _id },
     {
-      username: true,
-      _id: true,
       // "log.description": true,
       // "log.duration": true,
       // "log.date": true,
-      log: { description: true, duration: true, date: true },
+      "log._id": false,
+      __v: false
+      // log: { $project: { _id: false } },
     }
   );
 
