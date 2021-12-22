@@ -214,7 +214,7 @@ app.post(
   },
   (req, res) => {
     const addedExercise = req.addedExercise;
-    return res.json(req.body[":_id"])
+    return res.json({res: `ID: ${req.body[":_id"]} `})
 
     if (addedExercise.error !== undefined) return res.json(addedExercise);
 
