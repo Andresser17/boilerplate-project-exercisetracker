@@ -199,6 +199,7 @@ app.post(
   "/api/users/:_id/exercises",
   async (req, res, next) => {
     const _id = req.body[":_id"];
+    // const _id = req.params[":_id"];
     const description = req.body.description;
     const duration = req.body.duration;
     const date = req.body.date;
@@ -214,7 +215,7 @@ app.post(
   },
   (req, res) => {
     const addedExercise = req.addedExercise;
-    return res.json({res: `ID: ${req.body[":_id"]} `})
+    return res.json({res: `ID: ${req.params._id} `})
 
     if (addedExercise.error !== undefined) return res.json(addedExercise);
 
