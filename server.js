@@ -48,7 +48,7 @@ const addExerciseToUser = async (_id, description, duration, date) => {
   const user = await User.findOne({ _id });
 
   // Test if user exist
-  if (user === null) return { error: "username not found", _id, user };
+  if (user === null) return { error: "username not found", id: _id, user };
 
   // Test if description and duration were provided
   if (description.length === 0 || Number(duration) <= 0)
